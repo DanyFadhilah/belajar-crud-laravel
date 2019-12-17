@@ -12,4 +12,9 @@
 */
 
 Route::get('/', 'UserController@index');
+Route::post('/', 'UserController@store');
 Route::get('/create', 'UserController@create');
+Route::get('/delete/{user}', 'UserController@destroy');
+Route::get('/search', 'UserController@search');
+Route::get('/user/{user}/edit', 'UserController@edit');
+Route::patch('/', 'UserController@update');

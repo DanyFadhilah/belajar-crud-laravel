@@ -72,7 +72,7 @@ class UserController extends Controller
      */
     public function edit(User $user)
     {
-        //
+        return view('edit',compact('user'));
     }
 
     /**
@@ -82,9 +82,21 @@ class UserController extends Controller
      * @param  \App\User  $user
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, User $user)
+    public function update(Request $request)
     {
-        //
+        $user = \App\User::findOrFail($request->id);
+
+        $user->name = $request->name;
+        $user->email = $request->email;
+        $user->age = $request->age;
+        $user->born = $request->born;
+        $user->hobby = $request->hobby;
+        $user->address = $request->address;
+        $user->password = $request->password;
+
+        $user->save();
+
+        return redirect('/');
     }
 
     /**
@@ -95,6 +107,24 @@ class UserController extends Controller
      */
     public function destroy(User $user)
     {
-        //
+        $user = \App\User::findOrFail($user->id);
+        $user->delete();
+
+        return redirect('/');
+    }
+
+    public function search(request $request)
+    {
+        $search = $request->search;
+        $users = DB::table('users')
+                    ->where('name', 'like', '%'.$search.'%')
+                    ->orwhere('email', 'like', '%'.$search.'%')
+                    ->orwhere('address', 'like', '%'.$search.'%')
+                    ->orwhere('age', 'like', '%'.$search.'%')
+                    ->orwhere('born', 'like', '%'.$search.'%')
+                    ->orwhere('hobby', 'like', '%'.$search.'%')
+
+                    ->get();
+        return view('index',compact('users'));
     }
 }
